@@ -26,15 +26,20 @@
     this.board = board;
     this.board.bars.push(this);
     this.kind = "rectangle";
+    this.speed = 10;
   };
 
   self.Bar.prototype = {
     down: function () {
-
+      this.y += this.speed;
     },
     up: function () {
-        
+      this.y -= this.speed;
     },
+
+    toString: function () {
+        return "x: " + this.x + " y: " + this.y
+      },
   };
 })();
 
@@ -48,7 +53,7 @@
   };
 
   self.BoardView.prototype = {
-    draw: function () { 
+    draw: function () {
       for (var i = this.board.elements.length - 1; i >= 0; i--) {
         var el = this.board.elements[i];
 
@@ -58,27 +63,36 @@
   };
 
   function draw(ctx, element) {
-    if(element != null && element.hasOwnProperty("kind")){
-        switch (element.kind) {
-            case "rectangle":
-              ctx.fillRect(element.x, element.y, element.width, element.height);
-              break;
-          }
+    if (element != null && element.hasOwnProperty("kind")) {
+      switch (element.kind) {
+        case "rectangle":
+          ctx.fillRect(element.x, element.y, element.width, element.height);
+          break;
+      }
     }
-
   }
 })();
 
-window.addEventListener("load", main());
+document.addEventListener("keydown", function (ev) {
+  if (ev.key == "ArrowUp") {
+    bar.up();
+  } else if (ev.key = "ArrowDown") {
+    bar.down();
+  }
+  console.log(bar.toString());
+
+});
+
+var board = new Board(800, 400);
+var bar = new Bar(20, 100, 40, 100, board);
+var bar = new Bar(735, 100, 40, 100, board);
+var canvas = document.getElementById("canvas");
+var board_view = new BoardView(canvas, board);
+
+self.addEventListener("load", main());
+
+
 
 function main() {
-  var board = new Board(800, 400);
-  var bar = new Bar(20,100,40,100, board)
-  var bar = new Bar(735,100,40,100, board)
-  var canvas = document.getElementById("canvas");
-  var board_view = new BoardView(canvas, board);
-
-
-  board_view.draw()
+    board_view.draw();
 }
- 
